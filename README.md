@@ -1,21 +1,15 @@
+# 👷 LLM Engineer's Handbook
+
+**Official repository of the [LLM Engineer's Handbook](https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/) by [Paul Iusztin](https://github.com/iusztinpaul) and [Maxime Labonne](https://github.com/mlabonne)**
+
 <div align="center">
-  <h1>👷 LLM Engineer's Handbook</h1>
-  <p class="tagline">Official repository of the <a href="https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/">LLM Engineer's Handbook</a> by <a href="https://github.com/iusztinpaul">Paul Iusztin</a> and <a href="https://github.com/mlabonne">Maxime Labonne</a></p>
+  <img src="https://raw.githubusercontent.com/PacktPublishing/LLM-Engineers-Handbook/main/images/cover_plus.png" alt="Book cover" width="400">
 </div>
-</br>
 
-<p align="center">
-  <a href="https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/">
-    <img src="images/cover_plus.png" alt="Book cover">
-  </a>
-</p>
-
-<p align="center">
-  Find the book on <a href="https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/">Amazon</a> or <a href="https://www.packtpub.com/en-us/product/llm-engineers-handbook-9781836200062">Packt</a>
-</p>
+**Get the book on [Amazon](https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/) or [Packt](https://www.packtpub.com/en-us/product/llm-engineers-handbook-9781836200062)**
 
 ## 🌟 Features
-
+ß
 The goal of this book is to create your own end-to-end LLM-based system using best practices:
 
 - 📝 Data collection & generation
@@ -27,27 +21,27 @@ The goal of this book is to create your own end-to-end LLM-based system using be
 
 You can download and use the final trained model on [Hugging Face](https://huggingface.co/mlabonne/TwinLlama-3.1-8B-DPO).
 
-> [!IMPORTANT]
+> **IMPORTANT**  
 > The code in this GitHub repository is actively maintained and may contain updates not reflected in the book. **Always refer to this repository for the latest version of the code.**
 
 ## 🔗 Dependencies
 
-### Local dependencies
+### Local Dependencies
 
-To install and run the project locally, you need the following dependencies.
+To install and run the project locally, you need the following dependencies:
 
 | Tool | Version | Purpose | Installation Link |
 |------|---------|---------|------------------|
 | pyenv | ≥2.3.36 | Multiple Python versions (optional) | [Install Guide](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation) |
 | Python | 3.11 | Runtime environment | [Download](https://www.python.org/downloads/) |
-| Poetry | >= 1.8.3 and < 2.0 | Package management | [Install Guide](https://python-poetry.org/docs/#installation) |
+| Poetry | ≥2.0.0 | Package management | [Install Guide](https://python-poetry.org/docs/#installation) |
 | Docker | ≥27.1.1 | Containerization | [Install Guide](https://docs.docker.com/engine/install/) |
 | AWS CLI | ≥2.15.42 | Cloud management | [Install Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) |
 | Git | ≥2.44.0 | Version control | [Download](https://git-scm.com/downloads) |
 
-### Cloud services
+### Cloud Services
 
-The code also uses and depends on the following cloud services. For now, you don't have to do anything. We will guide you in the installation and deployment sections on how to use them:
+The code uses the following cloud services. You don't need to set these up immediately - we'll guide you through the installation and deployment process later:
 
 | Service | Purpose |
 |---------|---------|
@@ -60,13 +54,13 @@ The code also uses and depends on the following cloud services. For now, you don
 | [Qdrant](https://qdrant.tech/) | Vector database |
 | [GitHub Actions](https://github.com/features/actions) | CI/CD pipeline |
 
-In the [LLM Engineer's Handbook](https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/), Chapter 2 will walk you through each tool. Chapters 10 and 11 provide step-by-step guides on how to set up everything you need.
+In the [LLM Engineer's Handbook](https://www.amazon.com/LLM-Engineers-Handbook-engineering-production/dp/1836200072/), Chapter 2 walks you through each tool. Chapters 10 and 11 provide step-by-step guides on setting up everything you need.
 
 ## 🗂️ Project Structure
 
-Here is the directory overview:
+Here's the directory overview:
 
-```bash
+```
 .
 ├── code_snippets/       # Standalone example code
 ├── configs/             # Pipeline configuration files
@@ -79,162 +73,106 @@ Here is the directory overview:
 ├── steps/               # Pipeline components
 ├── tests/               # Test examples
 ├── tools/               # Utility scripts
-│   ├── run.py
-│   ├── ml_service.py
-│   ├── rag.py
-│   ├── data_warehouse.py
 ```
 
-`llm_engineering/`  is the main Python package implementing LLM and RAG functionality. It follows Domain-Driven Design (DDD) principles:
+### Core Components
 
-- `domain/`: Core business entities and structures
-- `application/`: Business logic, crawlers, and RAG implementation
-- `model/`: LLM training and inference
-- `infrastructure/`: External service integrations (AWS, Qdrant, MongoDB, FastAPI)
+- **llm_engineering/**: Main Python package implementing LLM and RAG functionality. Follows Domain-Driven Design (DDD) principles:
+  - `domain/`: Core business entities and structures
+  - `application/`: Business logic, crawlers, and RAG implementation
+  - `model/`: LLM training and inference
+  - `infrastructure/`: External service integrations
 
-The code logic and imports flow as follows: `infrastructure` → `model` → `application` → `domain`
-
-`pipelines/`: Contains the ZenML ML pipelines, which serve as the entry point for all the ML pipelines. Coordinates the data processing and model training stages of the ML lifecycle.
-
-`steps/`: Contains individual ZenML steps, which are reusable components for building and customizing ZenML pipelines. Steps perform specific tasks (e.g., data loading, preprocessing) and can be combined within the ML pipelines.
-
-`tests/`: Covers a few sample tests used as examples within the CI pipeline.
-
-`tools/`: Utility scripts used to call the ZenML pipelines and inference code:
-- `run.py`: Entry point script to run ZenML pipelines.
-- `ml_service.py`: Starts the REST API inference server.
-- `rag.py`: Demonstrates usage of the RAG retrieval module.
-- `data_warehouse.py`: Used to export or import data from the MongoDB data warehouse through JSON files.
-
-`configs/`: ZenML YAML configuration files to control the execution of pipelines and steps.
-
-`code_snippets/`: Independent code examples that can be executed independently.
+- **pipelines/**: ZenML ML pipelines (entry points for ML lifecycle)
+- **steps/**: Reusable ZenML components
+- **tests/**: Sample tests for CI pipeline
+- **tools/**: Utility scripts:
+  - `run.py`: Entry point for ZenML pipelines
+  - `ml_service.py`: REST API inference server
+  - `rag.py`: RAG retrieval module demo
+  - `data_warehouse.py`: MongoDB data warehouse import/export
 
 ## 💻 Installation
 
-> [!NOTE]
-> If you are experiencing issues while installing and running the repository, consider checking the [Issues](https://github.com/PacktPublishing/LLM-Engineers-Handbook/issues) GitHub section for other people who solved similar problems or directly asking us for help.
+> **Note**  
+> Having installation issues? Check the [Issues](https://github.com/PacktPublishing/LLM-Engineers-Handbook/issues) section for solutions or ask for help.
 
 ### 1. Clone the Repository
-
-Start by cloning the repository and navigating to the project directory:
 
 ```bash
 git clone https://github.com/PacktPublishing/LLM-Engineers-Handbook.git
 cd LLM-Engineers-Handbook 
 ```
 
-Next, we have to prepare your Python environment and its adjacent dependencies. 
-
 ### 2. Set Up Python Environment
 
-The project requires Python 3.11. You can either use your global Python installation or set up a project-specific version using pyenv.
+The project requires Python 3.11. Choose one of these options:
 
-#### Option A: Using Global Python (if version 3.11 is installed)
-
-Verify your Python version:
-
+#### Option A: Using Global Python
 ```bash
 python --version  # Should show Python 3.11.x
 ```
 
 #### Option B: Using pyenv (recommended)
-
-1. Verify pyenv installation:
-
 ```bash
+# Verify pyenv
 pyenv --version   # Should show pyenv 2.3.36 or later
-```
 
-2. Install Python 3.11.8:
-
-```bash
+# Install Python 3.11.8
 pyenv install 3.11.8
-```
 
-3. Verify the installation:
-
-```bash
+# Verify installation
 python --version  # Should show Python 3.11.8
 ```
 
-4. Confirm Python version in the project directory:
-
-```bash
-python --version
-# Output: Python 3.11.8
-```
-
-> [!NOTE]  
-> The project includes a `.python-version` file that automatically sets the correct Python version when you're in the project directory.
+> **Note**  
+> The included `.python-version` file automatically sets the correct Python version in the project directory.
 
 ### 3. Install Dependencies
 
-The project uses Poetry for dependency management.
-
-1. Verify Poetry installation:
-
 ```bash
-poetry --version  # Should show Poetry version 1.8.3 or later
-```
+# Verify Poetry installation
+poetry --version  # Should show Poetry version 2.0.0 or later
 
-2. Set up the project environment and install dependencies:
-
-```bash
+# Install dependencies
 poetry env use 3.11
 poetry install --without aws
 poetry run pre-commit install
 ```
 
-This will:
-
-- Configure Poetry to use Python 3.11
-- Install project dependencies (excluding AWS-specific packages)
-- Set up pre-commit hooks for code verification
-
 ### 4. Activate the Environment
 
-As our task manager, we run all the scripts using [Poe the Poet](https://poethepoet.natn.io/index.html).
-
-1. Start a Poetry shell:
+We use [Poe the Poet](https://poethepoet.natn.io/index.html) as our task manager.
 
 ```bash
-poetry shell
+# Get virtual environment path
+poetry env info --path
+
+# Activate it
+source $(poetry env info --path)/bin/activate
+
+# Run commands
+poetry run poe <command>
+
+# Example
+poetry run poe local-infrastructure-up
 ```
 
-2. Run project commands using Poe the Poet:
+#### Troubleshooting
 
+If `poethepoet` isn't working, you can run commands directly:
+
+1. Find the command in `pyproject.toml`
+2. Run it with `poetry run`:
 ```bash
-poetry poe ...
+poetry run <command-from-pyproject-toml>
 ```
-
-<details>
-<summary>🔧 Troubleshooting Poe the Poet Installation</summary>
-
-### Alternative Command Execution
-
-If you're experiencing issues with `poethepoet`, you can still run the project commands directly through Poetry. Here's how:
-
-1. Look up the command definition in `pyproject.toml`
-2. Use `poetry run` with the underlying command
-
-#### Example:
-Instead of:
-```bash
-poetry poe local-infrastructure-up
-```
-Use the direct command from pyproject.toml:
-```bash
-poetry run <actual-command-from-pyproject-toml>
-```
-Note: All project commands are defined in the [tool.poe.tasks] section of pyproject.toml
-</details>
 
 Now, let's configure our local project with all the necessary credentials and tokens to run the code locally.
 
 ### 5. Local Development Setup
 
-After you have installed all the dependencies, you must create and fill a `.env` file with your credentials to appropriately interact with other services and run the project. Setting your sensitive credentials in a `.env` file is a good security practice, as this file won't be committed to GitHub or shared with anyone else. 
+After you have installed all the dependencies, you must create and fill a `.env` file with your credentials to appropriately interact with other services and run the project. Setting your sensitive credentials in a `.env` file is a good security practice, as this file won't be committed to GitHub or shared with anyone else. 
 
 1. First, copy our example by running the following:
 
